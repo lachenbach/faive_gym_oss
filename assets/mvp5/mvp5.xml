@@ -1,7 +1,9 @@
 <mujoco model="right_hand_mvp4">
   <compiler angle="radian"/>
+  <!-- <option collision="all"/> -->
 
-  <option timestep="0.033333"/>
+  
+  
 
   <visual>
     <global azimuth="120" elevation="-20"/>
@@ -9,18 +11,20 @@
     <rgba haze="0.15 0.25 0.35 1"/>
   </visual>
 
-    <default>
-        <!-- use same geom params as the Shadow Hand model in IsaacGymEnv for now -->
-        <!-- the density is adjusted so that the total weight of the hand part (not including the base) is the same as the real hand (106g) (therefore the base will have a wrong mass, which shouldn't matter for now) -->
-        <geom rgba="1 1 1 1" type="mesh" density="662" friction="1 0.005 0.001" condim="3" margin="0.0005" contype="1" conaffinity="1"/>
-        <!-- use same joint params as IsaacGymEnv for now -->
-        <!-- TODO: joint damping and position control kp should eventually be set to sysID'ed values -->
-        <joint type="hinge" limited="true" damping="0.05" armature="0.001" margin="0.01" frictionloss="0.001"/>
-        <!-- actuator configuration -->
-        <position ctrllimited="true" forcelimited="true" forcerange="-1 1" kp="2."/>
-        <!-- the tendon which limits the two joints creating the rolling joint should be very limited in its length range -->
-        <tendon limited="true" range="-0.001 0.001"/>
-    </default>
+  
+
+  <default>
+      <!-- use same geom params as the Shadow Hand model in IsaacGymEnv for now -->
+      <!-- the density is adjusted so that the total weight of the hand part (not including the base) is the same as the real hand (106g) (therefore the base will have a wrong mass, which shouldn't matter for now) -->
+      <geom rgba="1 1 1 1" type="mesh" density="662" friction="1 0.005 0.001" condim="3" margin="0.0005" contype="1" conaffinity="1"/>
+      <!-- use same joint params as IsaacGymEnv for now -->
+      <!-- TODO: joint damping and position control kp should eventually be set to sysID'ed values -->
+      <joint type="hinge" limited="true" damping="0.05" armature="0.001" margin="0.01" frictionloss="0.001"/>
+      <!-- actuator configuration -->
+      <position ctrllimited="true" forcelimited="true" forcerange="-1 1" kp="2."/>
+      <!-- the tendon which limits the two joints creating the rolling joint should be very limited in its length range -->
+      <tendon limited="true" range="-0.001 0.001"/>
+  </default>
 
   <asset>
     <texture type="2d" name="checkerboard" builtin="checker" rgb1="0 0 0.2" rgb2="0.1 0.1 0.6" width="512" height="512"/>
@@ -73,7 +77,7 @@
         <site name="goal_site" pos="0.00699 0.07109 0.008" size="0.002" rgba="1 0 0 1"/>
         <body name="metacarpal" pos="0.02323 0.00942 0" quat="0.993562 0 0 0.113294">
           <joint name="metacarpal_joint" pos="0 0 0" axis="-0.707107 -0.707107 0" range="-1.5 1.5"/>
-          <geom contype="0" conaffinity="0" mesh="metacarpal"/>
+          <geom mesh="metacarpal"/>
           <body name="thumb_abduction" pos="0.03349 0.013 0" quat="-0.0987034 0.369735 0.89262 -0.238291">
             <joint name="thumb_abduction_joint" pos="0 0 0" axis="0 0 1" range="-1.5 1.5"/>
             <geom mesh="thumb_abduction"/>
@@ -98,7 +102,8 @@
           </body>
         </body>
         <body name="f2_base" pos="0.04139 0.08849 0.00247" quat="0.761631 -0.639548 0.0671287 -0.0799429">
-          <geom contype="0" conaffinity="0" mesh="f2_base"/>
+          <!-- <geom contype="0" conaffinity="0" mesh="f2_base"/> -->
+          <geom mesh="f2_base"/>
           <body name="f2_base_virtual" pos="0 0 -0.00022495">
             <inertial pos="0 0 0" mass="0.001" diaginertia="4e-10 4e-10 3e-10"/>
             <joint name="f2_base_abad_joint_virt" pos="0 0 0" axis="0 1 0" range="-0.2 0.2"/>
@@ -136,7 +141,7 @@
           </body>
         </body>
         <body name="f3_base" pos="0.01774 0.09097 0.00247" quat="0.766118 -0.6427 0 0">
-          <geom contype="0" conaffinity="0" mesh="f3_base"/>
+          <geom mesh="f3_base"/>
           <body name="f3_base_virtual" pos="0 0 -0.00022495">
             <inertial pos="0 0 0" mass="0.001" diaginertia="4e-10 4e-10 3e-10"/>
             <joint name="f3_base_abad_joint_virt" pos="0 0 0" axis="0 1 0" range="-0.2 0.2"/>
@@ -177,7 +182,7 @@
           <geom mesh="split_palm"/>
           <geom rgba="0.1 0.1 0.1 1" mesh="palm_pad2"/>
           <body name="f4_base" pos="0.00346 0.03441 -0.00685" quat="0.502602 -0.484853 0.421757 0.578299">
-            <geom contype="0" conaffinity="0" mesh="f4_base"/>
+            <geom mesh="f4_base"/>
             <body name="f4_base_virtual">
               <inertial pos="0 0 0" mass="0.001" diaginertia="4e-10 4e-10 3e-10"/>
               <joint name="f4_base_long_joint_virt" pos="0 0 0" axis="0 -1 0" range="-0.1 0.8"/>
@@ -207,7 +212,7 @@
             </body>
           </body>
           <body name="f5_base" pos="-0.02 0.02985 -0.00685" quat="0.471961 -0.506441 0.395454 0.603645">
-            <geom contype="0" conaffinity="0" mesh="f5_base"/>
+            <geom mesh="f5_base"/>
             <body name="f5_base_virtual">
               <inertial pos="0 0 0" mass="0.001" diaginertia="4e-10 4e-10 3e-10"/>
               <joint name="f5_base_long_joint_virt" pos="0 0 0" axis="0 -1 0" range="-0.1 0.8"/>
