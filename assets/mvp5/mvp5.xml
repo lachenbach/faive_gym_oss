@@ -9,13 +9,18 @@
     <rgba haze="0.15 0.25 0.35 1"/>
   </visual>
 
-  <default>
-    <joint limited="true" margin="0.01" armature="0.001" damping="0.05" frictionloss="0.001"/>
-    <geom type="mesh" friction="1 0.005 0.001" margin="0.0005" density="662" rgba="0.95 0.95 0.95 1"/>
-
-    <tendon limited="true" range="-0.001 0.001"/>
-    <general ctrllimited="true" forcelimited="true" forcerange="-1 1" biastype="affine" gainprm="2" biasprm="0 -2"/>
-  </default>
+    <default>
+        <!-- use same geom params as the Shadow Hand model in IsaacGymEnv for now -->
+        <!-- the density is adjusted so that the total weight of the hand part (not including the base) is the same as the real hand (106g) (therefore the base will have a wrong mass, which shouldn't matter for now) -->
+        <geom rgba="1 1 1 1" type="mesh" density="662" friction="1 0.005 0.001" condim="3" margin="0.0005" contype="1" conaffinity="1"/>
+        <!-- use same joint params as IsaacGymEnv for now -->
+        <!-- TODO: joint damping and position control kp should eventually be set to sysID'ed values -->
+        <joint type="hinge" limited="true" damping="0.05" armature="0.001" margin="0.01" frictionloss="0.001"/>
+        <!-- actuator configuration -->
+        <position ctrllimited="true" forcelimited="true" forcerange="-1 1" kp="2."/>
+        <!-- the tendon which limits the two joints creating the rolling joint should be very limited in its length range -->
+        <tendon limited="true" range="-0.001 0.001"/>
+    </default>
 
   <asset>
     <texture type="2d" name="checkerboard" builtin="checker" rgb1="0 0 0.2" rgb2="0.1 0.1 0.6" width="512" height="512"/>
@@ -341,20 +346,22 @@
   </tendon>
 
   <actuator>
-    <general name="metacarpal_joint" joint="metacarpal_joint" ctrlrange="-1.5 1.5"/>
-    <general name="thumb_abduction_joint" joint="thumb_abduction_joint" ctrlrange="-1.5 1.5"/>
-    <general name="f1_base_long_joint" joint="f1_base_long_joint" ctrlrange="-0.1 0.8"/>
-    <general name="f1_long_short_joint" joint="f1_long_short_joint" ctrlrange="-0.1 0.8" gainprm="4" biasprm="0 -4"/>
-    <general name="f2_base_abad_joint" joint="f2_base_abad_joint" ctrlrange="-0.2 0.2"/>
-    <general name="f2_abad_long_joint" joint="f2_abad_long_joint" ctrlrange="-0.1 0.8"/>
-    <general name="f2_long_short_joint" joint="f2_long_short_joint" ctrlrange="-0.1 0.8" gainprm="4" biasprm="0 -4"/>
-    <general name="f3_base_abad_joint" joint="f3_base_abad_joint" ctrlrange="-0.2 0.2"/>
-    <general name="f3_abad_long_joint" joint="f3_abad_long_joint" ctrlrange="-0.1 0.8"/>
-    <general name="f3_long_short_joint" joint="f3_long_short_joint" ctrlrange="-0.1 0.8" gainprm="4" biasprm="0 -4"/>
-    <general name="f4_base_long_joint" joint="f4_base_long_joint" ctrlrange="-0.1 0.8"/>
-    <general name="f4_long_short_joint" joint="f4_long_short_joint" ctrlrange="-0.1 0.8" gainprm="4" biasprm="0 -4"/>
-    <general name="f5_base_long_joint" joint="f5_base_long_joint" ctrlrange="-0.1 0.8"/>
-    <general name="f5_long_short_joint" joint="f5_long_short_joint" ctrlrange="-0.1 0.8" gainprm="4" biasprm="0 -4"/>
+      <!-- <position name="wrist_joint" joint="wrist_joint" ctrlrange="-0.5 0.5"/> -->
+      <!-- <position name="split_palm_joint" joint="split_palm_joint" ctrlrange="0 1"/> -->
+      <position name="metacarpal_joint" joint="metacarpal_joint" ctrlrange="-1.5 1.5"/> 
+      <position name="thumb_abduction_joint" joint="thumb_abduction_joint" ctrlrange="-1.5 1.5"/> 
+      <position name="f1_base_long_joint" joint="f1_base_long_joint" ctrlrange="-0.1 0.8"/>
+      <position name="f1_long_short_joint" joint="f1_long_short_joint" ctrlrange="-0.1 0.8" kp="4"/>
+      <position name="f2_base_abad_joint" joint="f2_base_abad_joint" ctrlrange="-0.2 0.2"/>
+      <position name="f2_abad_long_joint" joint="f2_abad_long_joint" ctrlrange="-0.1 0.8"/>
+      <position name="f2_long_short_joint" joint="f2_long_short_joint" ctrlrange="-0.1 0.8" kp="4"/>
+      <position name="f3_base_abad_joint" joint="f3_base_abad_joint" ctrlrange="-0.2 0.2"/>
+      <position name="f3_abad_long_joint" joint="f3_abad_long_joint" ctrlrange="-0.1 0.8"/>
+      <position name="f3_long_short_joint" joint="f3_long_short_joint" ctrlrange="-0.1 0.8" kp="4"/>
+      <position name="f4_base_long_joint" joint="f4_base_long_joint" ctrlrange="-0.1 0.8"/>
+      <position name="f4_long_short_joint" joint="f4_long_short_joint" ctrlrange="-0.1 0.8" kp="4"/>
+      <position name="f5_base_long_joint" joint="f5_base_long_joint" ctrlrange="-0.1 0.8"/>
+      <position name="f5_long_short_joint" joint="f5_long_short_joint" ctrlrange="-0.1 0.8" kp="4"/>
   </actuator>
 
   <sensor>
