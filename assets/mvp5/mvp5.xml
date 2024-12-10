@@ -1,0 +1,431 @@
+<mujoco model="right_hand_mvp4">
+        <compiler angle="radian"/>
+    <default>
+        <!-- use same geom params as the faive hand which is also using the same parameters as the shadow hand  -->
+        <!-- use same geom params as the Shadow Hand model in IsaacGymEnv for now -->
+        <!-- the density is adjusted so that the total weight of the hand part (not including the base) is the same as the real hand (106g) (therefore the base will have a wrong mass, which shouldn't matter for now) -->
+        <geom rgba="1 1 1 1" type="mesh" density="662" friction="1 0.005 0.001" condim="3" margin="0.0005" contype="1" conaffinity="1"/>
+        <!-- use same joint params as IsaacGymEnv for now -->
+        <!-- TODO: joint damping and position control kp should eventually be set to sysID'ed values -->
+        <joint type="hinge" limited="true" damping="0.05" armature="0.001" margin="0.01" frictionloss="0.001"/>
+        <!-- actuator configuration -->
+        <position ctrllimited="true" forcelimited="true" forcerange="-1 1" kp="2."/>
+        <!-- the tendon which limits the two joints creating the rolling joint should be very limited in its length range -->
+        <tendon limited="true" range="-0.001 0.001"/>
+    </default>
+
+    <visual>
+        <headlight diffuse="0.6 0.6 0.6" ambient="0.3 0.3 0.3" specular="0 0 0"/>
+        <rgba haze="0.15 0.25 0.35 1"/>
+        <global azimuth="120" elevation="-20"/>
+    </visual>
+
+    <asset>
+        <!-- Base parts -->
+        <mesh name="palm" file="mesh_2/Palm.stl" scale="1 1 1"/>
+        <mesh name="split_palm" file="mesh_2/split_palm2.stl" scale="1 1 1"/>
+        <mesh name="motorblock" file="mesh_2/motorblock.stl" scale="1 1 1"/>
+        <mesh name="wrist_mount" file="mesh_2/wrist_mount.stl" scale="1 1 1"/>
+        <!-- Finger 1 -->
+        <mesh name="f1_long" file="mesh_2/f_long.stl" scale="1 1 1"/>
+        <mesh name="f1_short" file="mesh_2/f_short.stl" scale="1 1 1"/>
+        <mesh name="mounting_feature" file="mesh_2/mounting_feature.stl" scale="1 1 1"/>
+        <mesh name="metacarpal" file="mesh_2/metacarpal.stl" scale="1 1 1"/>
+        <mesh name="thumb_abduction" file="mesh_2/thumb_abduction.stl" scale="1 1 1"/>
+        <!-- Finger 2 -->
+        <mesh name="f2_base" file="mesh_2/f_base.stl" scale="1 1 1"/> 
+        <mesh name="f2_abad" file="mesh_2/f_abad.stl" scale="1 1 1"/>
+        <mesh name="f2_long" file="mesh_2/f_long.stl" scale="1 1 1"/>
+        <mesh name="f2_short" file="mesh_2/f_short.stl" scale="1 1 1"/>
+        <mesh name="f2_tip" file="mesh_2/f_sensortip.stl" scale="1 1 1"/>
+        <!-- Finger 3 -->
+        <mesh name="f3_base" file="mesh_2/f_base.stl" scale="1 1 1"/>
+        <mesh name="f3_abad" file="mesh_2/f_abad.stl" scale="1 1 1"/>
+        <mesh name="f3_long" file="mesh_2/f_long.stl" scale="1 1 1"/>
+        <mesh name="f3_short" file="mesh_2/f_short.stl" scale="1 1 1"/>
+        <mesh name="f3_tip" file="mesh_2/f_sensortip.stl" scale="1 1 1"/>
+        <!-- Finger 4 -->
+        <mesh name="f4_base" file="mesh_2/f_no_abad_base.stl" scale="1 1 1"/>
+        <mesh name="f4_long" file="mesh_2/f_long.stl" scale="1 1 1"/>
+        <mesh name="f4_short" file="mesh_2/f_short.stl" scale="1 1 1"/>
+        <mesh name="f4_tip" file="mesh_2/f_sensortip.stl" scale="1 1 1"/>
+        <!-- Finger 5 -->
+        <mesh name="f5_base" file="mesh_2/f_no_abad_base.stl" scale="1 1 1"/>
+        <mesh name="f5_long" file="mesh_2/f_long.stl" scale="1 1 1"/>
+        <mesh name="f5_short" file="mesh_2/f_short.stl" scale="1 1 1"/>
+        <mesh name="f5_tip" file="mesh_2/f_sensortip.stl" scale="1 1 1"/>
+        <!--
+        <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/>
+        <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3" markrgb="0.8 0.8 0.8" width="300" height="300"/>
+        <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2"/>
+        -->
+        <material name="checkerboard_mat" texture="checkerboard" texrepeat="10 10" texuniform="true"/>
+        <texture name="checkerboard" type="2d" builtin="checker" width="512" height="512" rgb1="0.0 0.0 0.2" rgb2="0.1 0.1 0.6"/>
+
+    </asset>
+
+    <contact>
+        <exclude body1="root" body2="palm"/>
+        <exclude body1="palm" body2="split_palm"/>
+        <exclude body1="f1_long" body2="f1_short"/>
+        <exclude body1="thumb_abduction" body2="f1_long"/>
+        
+        <exclude body1="f2_base" body2="f2_abad"/>
+        <exclude body1="f2_abad" body2="f2_long"/>
+        <exclude body1="f2_long" body2="f2_short"/>
+        <exclude body1="f2_short" body2="f2_tip"/>
+
+        <exclude body1="f3_base" body2="f3_abad"/>
+        <exclude body1="f3_abad" body2="f3_long"/>
+        <exclude body1="f3_long" body2="f3_short"/>
+        <exclude body1="f3_short" body2="f3_tip"/>
+
+        <exclude body1="f4_base" body2="f4_long"/>
+        <exclude body1="f4_long" body2="f4_short"/>
+        <exclude body1="f4_short" body2="f4_tip"/>
+
+        <exclude body1="f5_base" body2="f5_long"/>
+        <exclude body1="f5_long" body2="f5_short"/>
+        <exclude body1="f5_short" body2="f5_tip"/>
+    </contact>
+
+    <actuator>
+        <!-- <position name="wrist_joint" joint="wrist_joint" ctrlrange="-0.5 0.5"/> -->
+        <position name="split_palm_joint" joint="split_palm_joint" ctrlrange="0 1"/> 
+        <position name="metacarpal_joint" joint="metacarpal_joint" ctrlrange="-1.5 1.5"/> 
+        <position name="thumb_abduction_joint" joint="thumb_abduction_joint" ctrlrange="-1.5 1.5"/> 
+        <position name="f1_base_long_joint" joint="f1_base_long_joint" ctrlrange="-0.1 0.8"/>
+        <position name="f1_long_short_joint" joint="f1_long_short_joint" ctrlrange="-0.1 0.8" kp="4"/>
+        <position name="f2_base_abad_joint" joint="f2_base_abad_joint" ctrlrange="-0.2 0.2"/>
+        <position name="f2_abad_long_joint" joint="f2_abad_long_joint" ctrlrange="-0.1 0.8"/>
+        <position name="f2_long_short_joint" joint="f2_long_short_joint" ctrlrange="-0.1 0.8" kp="4"/>
+        <position name="f3_base_abad_joint" joint="f3_base_abad_joint" ctrlrange="-0.2 0.2"/>
+        <position name="f3_abad_long_joint" joint="f3_abad_long_joint" ctrlrange="-0.1 0.8"/>
+        <position name="f3_long_short_joint" joint="f3_long_short_joint" ctrlrange="-0.1 0.8" kp="4"/>
+        <position name="f4_base_long_joint" joint="f4_base_long_joint" ctrlrange="-0.1 0.8"/>
+        <position name="f4_long_short_joint" joint="f4_long_short_joint" ctrlrange="-0.1 0.8" kp="4"/>
+        <position name="f5_base_long_joint" joint="f5_base_long_joint" ctrlrange="-0.1 0.8"/>
+        <position name="f5_long_short_joint" joint="f5_long_short_joint" ctrlrange="-0.1 0.8" kp="4"/>
+
+
+    </actuator>
+    <tendon>
+        <!-- New thumb -->
+        <fixed name="f1_base_long_joint">
+            <joint joint="f1_base_long_joint_virt" coef="1"/>
+            <joint joint="f1_base_long_joint" coef="-1"/>
+        </fixed>
+        <fixed name="f1_long_short_joint">
+            <joint joint="f1_long_short_joint_virt" coef="1"/>
+            <joint joint="f1_long_short_joint" coef="-1"/>
+        </fixed>
+
+        <!-- Index finger -->
+        <fixed name="f2_base_abad_joint">
+            <joint joint="f2_base_abad_joint_virt" coef="1"/>
+            <joint joint="f2_base_abad_joint" coef="-1"/>
+        </fixed>
+        <fixed name="f2_abad_long_joint">
+            <joint joint="f2_abad_long_joint_virt" coef="1"/>
+            <joint joint="f2_abad_long_joint" coef="-1"/>
+        </fixed>
+        <fixed name="f2_long_short_joint">
+            <joint joint="f2_long_short_joint_virt" coef="1"/>
+            <joint joint="f2_long_short_joint" coef="-1"/>
+        </fixed>
+        <!-- joint link -->
+        <fixed name="f2_index_join_link">
+            <joint joint="f2_long_short_joint" coef="0.71"/>
+            <joint joint="f2_short_tip_joint_virt" coef="-1"/>
+        </fixed>
+        <fixed name="f2_short_tip_joint">
+            <joint joint="f2_short_tip_joint_virt" coef="1"/>
+            <joint joint="f2_short_tip_joint" coef="-1"/>
+        </fixed>
+
+        <!-- Middle finger -->
+        <fixed name="f3_base_abad_joint">
+            <joint joint="f3_base_abad_joint_virt" coef="1"/>
+            <joint joint="f3_base_abad_joint" coef="-1"/>
+        </fixed>
+        <fixed name="f3_abad_long_joint">
+            <joint joint="f3_abad_long_joint_virt" coef="1"/>
+            <joint joint="f3_abad_long_joint" coef="-1"/>
+        </fixed>
+        <fixed name="f3_long_short_joint">
+            <joint joint="f3_long_short_joint_virt" coef="1"/>
+            <joint joint="f3_long_short_joint" coef="-1"/>
+        </fixed>
+        <!-- joint link -->
+        <fixed name="f3_index_join_link">
+            <joint joint="f3_long_short_joint" coef="0.71"/>
+            <joint joint="f3_short_tip_joint_virt" coef="-1"/>
+        </fixed>
+        <fixed name="f3_short_tip_joint">
+            <joint joint="f3_short_tip_joint_virt" coef="1"/>
+            <joint joint="f3_short_tip_joint" coef="-1"/>
+        </fixed>
+
+        <!-- Ring finger -->
+        <fixed name="f4_base_long_joint">
+            <joint joint="f4_base_long_joint_virt" coef="1"/>
+            <joint joint="f4_base_long_joint" coef="-1"/>
+        </fixed>
+        <fixed name="f4_long_short_joint">
+            <joint joint="f4_long_short_joint_virt" coef="1"/>
+            <joint joint="f4_long_short_joint" coef="-1"/>
+        </fixed>
+        <!-- joint link -->
+        <fixed name="f4_index_join_link">
+            <joint joint="f4_long_short_joint" coef="0.71"/>
+            <joint joint="f4_short_tip_joint_virt" coef="-1"/>
+        </fixed>
+        <fixed name="f4_short_tip_joint">
+            <joint joint="f4_short_tip_joint_virt" coef="1"/>
+            <joint joint="f4_short_tip_joint" coef="-1"/>
+        </fixed>
+
+        <!-- Pinky finger -->
+        <fixed name="f5_base_long_joint">
+            <joint joint="f5_base_long_joint_virt" coef="1"/>
+            <joint joint="f5_base_long_joint" coef="-1"/>
+        </fixed>
+        <fixed name="f5_long_short_joint">
+            <joint joint="f5_long_short_joint_virt" coef="1"/>
+            <joint joint="f5_long_short_joint" coef="-1"/>
+        </fixed>
+        <!-- joint link -->
+        <fixed name="f5_index_join_link">
+            <joint joint="f5_long_short_joint" coef="0.71"/>
+            <joint joint="f5_short_tip_joint_virt" coef="-1"/>
+        </fixed>
+        <fixed name="f5_short_tip_joint">
+            <joint joint="f5_short_tip_joint_virt" coef="1"/>
+            <joint joint="f5_short_tip_joint" coef="-1"/>
+        </fixed>
+    </tendon>
+
+
+
+    <worldbody>
+        <!-- Bases -->
+        <!-- <geom type="sphere" size="0.01" rgba="1 0 0 1" pos="0.05257788  0.17834803 -0.01446084" conaffinity="0" contype="0"/>
+        <geom type="sphere" size="0.01" rgba="1 0 0 1" pos="0.04139  0.23699 -0.00853" conaffinity="0" contype="0"/>
+        <geom type="sphere" size="0.01" rgba="1 0 0 1" pos="0.01774  0.23947 -0.00853" conaffinity="0" contype="0"/>
+        <geom type="sphere" size="0.01" rgba="1 0 0 1" pos="-0.03722681  0.22872753 -0.00985" conaffinity="0" contype="0"/>
+        <geom type="sphere" size="0.01" rgba="1 0 0 1" pos="-0.04633989  0.20663416 -0.00985" conaffinity="0" contype="0"/>
+        
+        
+        <geom type="sphere" size="0.01" rgba="0 1 0 1" pos="0.05273368  0.17825072 -0.0083972" conaffinity="0" contype="0"/>
+        <geom type="sphere" size="0.01" rgba="0 1 0 1" pos="0.04139  0.23699 -0.00853" conaffinity="0" contype="0"/>
+        <geom type="sphere" size="0.01" rgba="0 1 0 1" pos="0.01774  0.23947 -0.00853" conaffinity="0" contype="0"/>
+        <geom type="sphere" size="0.01" rgba="0 1 0 1" pos="0.01976811  0.18999912 -0.00985" conaffinity="0" contype="0"/>
+        <geom type="sphere" size="0.01" rgba="0 1 0 1" pos="0.02493856  0.21333218 -0.00985" conaffinity="0" contype="0"/> -->
+
+        <!-- Tips -->
+        <!-- <geom type="sphere" size="0.01" rgba="1 0 0 1" pos="0.12643549  0.13118093 -0.01453272" conaffinity="0" contype="0"/>
+        <geom type="sphere" size="0.01" rgba="1 0 0 1" pos="0.04616186 0.25947073 0.07325698" conaffinity="0" contype="0"/>
+        <geom type="sphere" size="0.01" rgba="1 0 0 1" pos="0.01774    0.2623746  0.07327859" conaffinity="0" contype="0"/>
+        <geom type="sphere" size="0.01" rgba="1 0 0 1" pos="-0.00760293  0.2462007   0.07133006" conaffinity="0" contype="0"/>
+        <geom type="sphere" size="0.01" rgba="1 0 0 1" pos="-0.03164957  0.24150999  0.07133102" conaffinity="0" contype="0"/> -->
+
+        <!-- <geom type="sphere" size="0.01" rgba="0 1 0 1" pos="0.12643549  0.13118093 -0.01453272" conaffinity="0" contype="0"/>
+        <geom type="sphere" size="0.01" rgba="0 1 0 1" pos="0.06500562 0.34824574 0.00788723" conaffinity="0" contype="0"/>
+        <geom type="sphere" size="0.01" rgba="0 1 0 1" pos="0.01774    0.35318905 0.00799437" conaffinity="0" contype="0"/>
+        <geom type="sphere" size="0.01" rgba="0 1 0 1" pos="-0.02025799  0.33614275  0.00606468" conaffinity="0" contype="0"/>
+        <geom type="sphere" size="0.01" rgba="0 1 0 1" pos="-0.05357046  0.32966605  0.00608321" conaffinity="0" contype="0"/>
+ -->
+        <geom name="ground" type="plane" pos="0 0 -1" size="10 10 0.1" material="checkerboard_mat" rgba="0.8 0.8 0.8 1"/>
+
+        <body name="root" pos="0 0 0" xyaxes="0 1 0 0 0 1">
+            <geom mesh="motorblock" rgba="0.2 0.2 0.2 1"/>
+            <geom mesh="wrist_mount" rgba="0.2 0.2 0.2 1" pos="0.15500 -0.01100 0" xyaxes="0 0 1 0 -1 0"/>
+            
+            <body name="palm" pos="0.14850 -0.01100 0" xyaxes="0 0 1 1 0 0">
+                <!-- <joint name="wrist_joint" axis="1 0 0" pos="0 0 0" range="-0.5 0.5"/> --> 
+                <geom mesh="palm" rgba="0.2 0.2 0.2 1"/>
+                
+                <geom mesh="mounting_feature" rgba="0.2 0.2 0.2 1" pos="0.05874 0.06624 0" xyaxes="0.84785777 -0.53022374 0 0.53022374 0.84785777 0"/>
+                <body name="metacarpal" pos="0.02323 0.00942 0" xyaxes="0.97432896 0.22512904 0 -0.22512904  0.97432896 -0">
+                    <joint name="metacarpal_joint" pos="0 0 0" axis="-0.7071067 -0.7071067 0" range="-1.5 1.5"/>
+                    <geom mesh="metacarpal" rgba="0.2 0.2 0.2 1"  conaffinity="0" contype="0"/>
+                    <body name="thumb_abduction" pos="0.03349 0.01300 0" xyaxes="-0.70710678  0.70710678  0. 0.61302617  0.61302617 -0.49839526">
+                        <geom mesh="thumb_abduction" rgba="0.2 0.2 0.2 1"/>
+                        <joint name="thumb_abduction_joint" pos="0 0 0" axis="0 0 1" range="-1.5 1.5"/>
+                        <body name="f1_base_virtual" pos="-0.02213 0 0.00250" xyaxes="1 0 0 0 1 0">
+                            <joint name="f1_base_long_joint_virt" axis="0 -1 0" pos="0 0 0" range="-0.1 0.8"/>
+                            <inertial pos="0 0 0" mass="0.001" diaginertia="4E-10 4E-10 3E-10"/>
+                            <body name="f1_long" pos="-0.009 0.00100 0" xyaxes="-1 0 0 0 1 0">
+                                <geom mesh="f1_long" rgba="0.2 0.2 0.2 1"/>
+                                <joint name="f1_base_long_joint" axis="0 -1 0" pos="0.009 0 0" range="-0.1 1"/>
+                                <body name="f1_long_short_joint_virt" pos="0.03508 0 -0.00100" xyaxes="1 0 0 0 1 0">
+                                    <joint name="f1_long_short_joint_virt" axis="0 -1 0" pos="0 0 0" range="-0.1 0.8"/>
+                                    <inertial pos="0 0 0" mass="0.001" diaginertia="4E-10 4E-10 3E-10"/>
+                                    <body name="f1_short" pos="0.00600 0 0.0" xyaxes="1 0 0 0 1 0">
+                                        <geom mesh="f1_short" rgba = "0.5 0.5 0.5 1"/>
+                                        <joint name="f1_long_short_joint" axis="0 -1 0" pos="0.006 0 0" range="-0.1 0.8"/>
+                                    </body>
+                                </body>
+                            </body>
+                        </body>
+                    </body>
+                </body>
+
+
+
+                <body name="f2_base" xyaxes="0.97820573 -0.20763801  0.0 0.03539597 0.16928507 -0.98493131" pos="0.04139 0.08849 0.00247">
+                    <geom mesh="f2_base" rgba = "0.5 0.5 0.5 1" contype="0" conaffinity="0"/>
+                    <body name="f2_base_virtual" pos="0 0 -0.00022495" xyaxes="1 0 0 0 1 0">
+                        <joint name = "f2_base_abad_joint_virt" axis="0 1 0" pos="0 0 0" range="-0.2 0.2"/>
+                        <inertial pos="0 0 0" mass="0.001" diaginertia="4E-10 4E-10 3E-10"/> 
+                        <body name="f2_abad" pos="0 0.0025 0.01178495" xyaxes="0 1 0 -1 0 0">
+                            <geom mesh="f2_abad" rgba = "0.5 0.5 0.5 1"/>
+                            <joint name="f2_base_abad_joint" axis="1 0 0" pos="0 0 0.00622" range="-0.2 0.2"/>
+                            <body name="f2_abad_long_joint_virt" pos="0 0 0" >
+                                <joint name="f2_abad_long_joint_virt" axis="0 -1 0" pos="0 0 0" range="-0.1 0.8"/>
+                                <inertial pos="0 0 0" mass="0.001" diaginertia="4E-10 4E-10 3E-10"/>
+                                <body name="f2_long" pos="0 0 0.009" xyaxes="0 0 1 0 1 0">
+                                    <joint name="f2_abad_long_joint" axis="0 -1 0" pos="0.009 0 0" range="-0.1 0.8"/>
+                                    <geom mesh="f2_long" rgba = "0.5 0.5 0.5 1" pos="0 0 0"/>
+                                    <body name="f2_long_short_joint_virt" pos="0.03508 0 -0.00100" xyaxes="1 0 0 0 1 0">
+                                        <joint name="f2_long_short_joint_virt" axis="0 -1 0" pos="0 0 0" range="-0.1 0.8"/>
+                                        <inertial pos="0 0 0" mass="0.001" diaginertia="4E-10 4E-10 3E-10"/>
+                                        <body name="f2_short" pos="0.00600 0 0.0" xyaxes="1 0 0 0 1 0">
+                                            <geom mesh="f2_short" rgba = "0.5 0.5 0.5 1"/>
+                                            <joint name="f2_long_short_joint" axis="0 -1 0" pos="0.006 0 0" range="-0.1 0.8"/>
+                                            
+                                            <body name="f2_short_tip_joint_virt" pos="0.02300 0 0" xyaxes="1 0 0 0 1 0">
+                                                <joint name="f2_short_tip_joint_virt" axis="0 -1 0" pos="0 0 0" range="-0.1 0.8"/>
+                                                <inertial pos="0 0 0" mass="0.001" diaginertia="4E-10 4E-10 3E-10"/>
+                                                <body name="f2_tip" pos="0.00450 0 0">
+                                                    <joint name="f2_short_tip_joint" axis = "0 -1 0" pos="0.0045 0 0" range="-0.1 0.8"/>
+                                                    <geom mesh="f2_tip" rgba = "0.5 0.5 0.5 1"/>
+                                                    <!-- <body name="f2_tip_keyvector" pos="0.02192 0 0.00450" xyaxes="1 0 0 0 1 0">
+                                                    </body> -->
+                                                </body>
+                                            </body> 
+                                        </body>
+                                    </body> 
+                                </body>
+                            </body> 
+                        </body>
+                    </body>
+                </body>
+
+
+
+
+                <body name="f3_base" xyaxes="1 0 0 0 0.17387311 -0.98476806" pos="0.01774 0.09097 0.00247">
+                    <geom mesh="f3_base" rgba = "0.5 0.5 0.5 1" contype="0" conaffinity="0"/>
+                    <body name="f3_base_virtual" pos="0 0 -0.00022495" xyaxes="1 0 0 0 1 0">
+                        <joint name = "f3_base_abad_joint_virt" axis="0 1 0" pos="0 0 0" range="-0.2 0.2"/>
+                        <inertial pos="0 0 0" mass="0.001" diaginertia="4E-10 4E-10 3E-10"/> 
+                        <body name="f3_abad" pos="0 0.0025 0.01178495" xyaxes="0 1 0 -1 0 0">
+                            <geom mesh="f3_abad" rgba = "0.5 0.5 0.5 1"/>
+                            <joint name="f3_base_abad_joint" axis="1 0 0" pos="0 0 0.00622" range="-0.2 0.2"/>
+                            <body name="f3_abad_long_joint_virt" pos="0 0 0" >
+                                <joint name="f3_abad_long_joint_virt" axis="0 -1 0" pos="0 0 0" range="-0.1 0.8"/>
+                                <inertial pos="0 0 0" mass="0.001" diaginertia="4E-10 4E-10 3E-10"/>
+                                <body name="f3_long" pos="0 0 0.009" xyaxes="0 0 1 0 1 0">
+                                    <joint name="f3_abad_long_joint" axis="0 -1 0" pos="0.009 0 0" range="-0.1 0.8"/>
+                                    <geom mesh="f3_long" rgba = "0.5 0.5 0.5 1" pos="0 0 0"/>
+                                    <body name="f3_long_short_joint_virt" pos="0.03508 0 -0.00100" xyaxes="1 0 0 0 1 0">
+                                        <joint name="f3_long_short_joint_virt" axis="0 -1 0" pos="0 0 0" range="-0.1 0.8"/>
+                                        <inertial pos="0 0 0" mass="0.001" diaginertia="4E-10 4E-10 3E-10"/>
+                                        <body name="f3_short" pos="0.00600 0 0.0" xyaxes="1 0 0 0 1 0">
+                                            <geom mesh="f3_short" rgba = "0.5 0.5 0.5 1"/>
+                                            <joint name="f3_long_short_joint" axis="0 -1 0" pos="0.006 0 0" range="-0.1 0.8"/>
+                                            
+                                            <body name="f3_short_tip_joint_virt" pos="0.02300 0 0" xyaxes="1 0 0 0 1 0">
+                                                <joint name="f3_short_tip_joint_virt" axis="0 -1 0" pos="0 0 0" range="-0.1 0.8"/>
+                                                <inertial pos="0 0 0" mass="0.001" diaginertia="4E-10 4E-10 3E-10"/>
+                                                <body name="f3_tip" pos="0.00450 0 0">
+                                                    <joint name="f3_short_tip_joint" axis = "0 -1 0" pos="0.0045 0 0" range="-0.1 0.8"/>
+                                                    <geom mesh="f3_tip" rgba = "0.5 0.5 0.5 1"/>
+                                                    <!-- <body name="f3_tip_keyvector" pos="0.02192 0 0.00450" xyaxes="1 0 0 0 1 0">
+                                                    </body> -->
+                                                </body>
+                                            </body> 
+                                        </body>
+                                    </body> 
+                                </body>
+                            </body> 
+                        </body>
+                    </body>
+                </body>
+
+
+
+
+                <body name="split_palm" pos="-0.01041 0.05839 0.00800" xyaxes="1 0 0 0 1 0">
+                    <joint name="split_palm_joint" axis="0 0 1" pos="0 0 0" range="0 1"/>
+                    <!-- <joint name="split_palm_joint" axis="0 0 -1" pos="-0.01041 0.05839 0" range="-1 1"/> -->
+                    <geom mesh="split_palm" rgba="0.2 0.2 0.2 1"/>
+
+                    <!-- -0.00695 0.09280 0.00115 old position of base relative to palm -->
+                    <body name="f4_base" xyaxes="-0.0246183   0.17232809 -0.98473193 -0.9902993  -0.13895068 0" pos="0.00346 0.03441 -0.00685">
+                        <geom mesh="f4_base" rgba = "0.5 0.5 0.5 1" contype="0" conaffinity="0"/>
+                        <body name="f4_base_virtual" pos="0 0 0" xyaxes="1 0 0 0 1 0">
+                            <joint name="f4_base_long_joint_virt" axis="0 -1 0" pos="0 0 0" range="-0.1 0.8"/>
+                            <inertial pos="0 0 0" mass="0.001" diaginertia="4E-10 4E-10 3E-10"/>
+                            <body name="f4_long" pos="0 0 0.009" xyaxes="0 0 1 0 1 0">
+                                <joint name="f4_base_long_joint" axis="0 -1 0" pos="0.009 0 0" range="-0.1 0.8"/>
+                                <geom mesh="f4_long" rgba = "0.5 0.5 0.5 1" pos="0 0 0"/>
+                                <body name="f4_long_short_joint_virt" pos="0.03508 0 -0.00100" xyaxes="1 0 0 0 1 0">
+                                    <joint name="f4_long_short_joint_virt" axis="0 -1 0" pos="0 0 0" range="-0.1 0.8"/>
+                                    <inertial pos="0 0 0" mass="0.001" diaginertia="4E-10 4E-10 3E-10"/>
+                                    <body name="f4_short" pos="0.00600 0 0.0" xyaxes="1 0 0 0 1 0">
+                                        <geom mesh="f4_short" rgba = "0.5 0.5 0.5 1"/>
+                                        <joint name="f4_long_short_joint" axis="0 -1 0" pos="0.006 0 0" range="-0.1 0.8"/>
+                                        
+                                        <body name="f4_short_tip_joint_virt" pos="0.02300 0 0" xyaxes="1 0 0 0 1 0">
+                                            <joint name="f4_short_tip_joint_virt" axis="0 -1 0" pos="0 0 0" range="-0.1 0.8"/>
+                                            <inertial pos="0 0 0" mass="0.001" diaginertia="4E-10 4E-10 3E-10"/>
+                                            <body name="f4_tip" pos="0.00450 0 0">
+                                                <joint name="f4_short_tip_joint" axis = "0 -1 0" pos="0.0045 0 0" range="-0.1 0.8"/>
+                                                <geom mesh="f4_tip" rgba = "0.5 0.5 0.5 1"/>
+                                                <!-- <body name="f4_tip_keyvector" pos="0.02192 0 0.00450" xyaxes="1 0 0 0 1 0">
+                                                </body> -->
+                                            </body>
+                                        </body> 
+                                    </body>
+                                </body> 
+                            </body>
+                        </body>
+                    </body>
+
+                    <!-- <body name="f5_base" xyaxes="-0.04154195  0.16924499 -0.98469813 -0.97031522 -0.24184372 0" pos="-0.03041 0.08824 0.00115"> -->
+                    <body name="f5_base" xyaxes="-0.04154195  0.16924499 -0.98469813 -0.97031522 -0.24184372 0" pos="-0.020 0.02985 -0.00685">
+                        <geom mesh="f5_base" rgba = "0.5 0.5 0.5 1" contype="0" conaffinity="0"/>
+                        <body name="f5_base_virtual" pos="0 0 0" xyaxes="1 0 0 0 1 0">
+                            <joint name="f5_base_long_joint_virt" axis="0 -1 0" pos="0 0 0" range="-0.1 0.8"/>
+                            <inertial pos="0 0 0" mass="0.001" diaginertia="4E-10 4E-10 3E-10"/>
+                            <body name="f5_long" pos="0 0 0.009" xyaxes="0 0 1 0 1 0">
+                                <joint name="f5_base_long_joint" axis="0 -1 0" pos="0.009 0 0" range="-0.1 0.8"/>
+                                <geom mesh="f5_long" rgba = "0.5 0.5 0.5 1" pos="0 0 0"/>
+                                <body name="f5_long_short_joint_virt" pos="0.03508 0 -0.00100" xyaxes="1 0 0 0 1 0">
+                                    <joint name="f5_long_short_joint_virt" axis="0 -1 0" pos="0 0 0" range="-0.1 0.8"/>
+                                    <inertial pos="0 0 0" mass="0.001" diaginertia="4E-10 4E-10 3E-10"/>
+                                    <body name="f5_short" pos="0.00600 0 0.0" xyaxes="1 0 0 0 1 0">
+                                        <geom mesh="f5_short" rgba = "0.5 0.5 0.5 1"/>
+                                        <joint name="f5_long_short_joint" axis="0 -1 0" pos="0.006 0 0" range="-0.1 0.8"/>     
+                                        <body name="f5_short_tip_joint_virt" pos="0.02300 0 0" xyaxes="1 0 0 0 1 0">
+                                            <joint name="f5_short_tip_joint_virt" axis="0 -1 0" pos="0 0 0" range="-0.1 0.8"/>
+                                            <inertial pos="0 0 0" mass="0.001" diaginertia="4E-10 4E-10 3E-10"/>
+                                            <body name="f5_tip" pos="0.00450 0 0">
+                                                <joint name="f5_short_tip_joint" axis = "0 -1 0" pos="0.0045 0 0" range="-0.1 0.8"/>
+                                                <geom mesh="f5_tip" rgba = "0.5 0.5 0.5 1"/>
+                                                <!-- <body name="f5_tip_keyvector" pos="0.02192 0 0.00450" xyaxes="1 0 0 0 1 0">
+                                                </body> -->
+                                            </body>
+                                        </body> 
+                                    </body>
+                                </body> 
+                            </body>
+                        </body>
+                    </body>            
+                </body>
+            </body>
+        </body>
+    </worldbody>
+</mujoco>
