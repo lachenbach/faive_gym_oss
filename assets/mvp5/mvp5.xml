@@ -2,17 +2,6 @@
   <compiler angle="radian"/>
   <!-- <option collision="all"/> -->
 
-  
-  
-
-  <visual>
-    <global azimuth="120" elevation="-20"/>
-    <headlight ambient="0.3 0.3 0.3" diffuse="0.6 0.6 0.6" specular="0 0 0"/>
-    <rgba haze="0.15 0.25 0.35 1"/>
-  </visual>
-
-  
-
   <default>
       <!-- use same geom params as the Shadow Hand model in IsaacGymEnv for now -->
       <!-- the density is adjusted so that the total weight of the hand part (not including the base) is the same as the real hand (106g) (therefore the base will have a wrong mass, which shouldn't matter for now) -->
