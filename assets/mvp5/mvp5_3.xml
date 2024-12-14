@@ -95,7 +95,9 @@
           <geom mesh="f2_base"/>
           <body name="f2_base_virtual" pos="0 0 -0.00022495">
             <inertial pos="0 0 0" mass="0.001" diaginertia="4e-10 4e-10 3e-10"/>
+            <joint name="f2_base_abad_joint_virt" pos="0 0 0" axis="0 1 0" range="-0.2 0.2"/>            
             <body name="f2_abad" pos="0 0.0025 0.011785" quat="0.707107 0 0 0.707107">
+              <joint name="f2_base_abad_joint" pos="0 0 0.00622" axis="1 0 0" range="-0.2 0.2"/>              
               <geom mesh="f2_abad"/>
               <body name="f2_abad_long_joint_virt">
                 <inertial pos="0 0 0" mass="0.001" diaginertia="4e-10 4e-10 3e-10"/>
@@ -131,7 +133,9 @@
           <geom mesh="f3_base"/>
           <body name="f3_base_virtual" pos="0 0 -0.00022495">
             <inertial pos="0 0 0" mass="0.001" diaginertia="4e-10 4e-10 3e-10"/>
+            <joint name="f3_base_abad_joint_virt" pos="0 0 0" axis="0 1 0" range="-0.2 0.2"/>            
             <body name="f3_abad" pos="0 0.0025 0.011785" quat="0.707107 0 0 0.707107">
+              <joint name="f3_base_abad_joint" pos="0 0 0.00622" axis="1 0 0" range="-0.2 0.2"/>
               <geom mesh="f3_abad"/>
               <body name="f3_abad_long_joint_virt">
                 <inertial pos="0 0 0" mass="0.001" diaginertia="4e-10 4e-10 3e-10"/>
@@ -332,6 +336,8 @@
 
   <actuator>
       <!-- <position name="wrist_joint" joint="wrist_joint" ctrlrange="-0.5 0.5"/> -->
+      <position name="f2_base_abad_joint" joint="f2_base_abad_joint" ctrlrange="-0.2 0.2"/>
+      <position name="f3_base_abad_joint" joint="f3_base_abad_joint" ctrlrange="-0.2 0.2"/>
       <position name="split_palm_joint" joint="split_palm_joint" ctrlrange="0 1"/>
       <position name="metacarpal_joint" joint="metacarpal_joint" ctrlrange="-1.5 1.5"/> 
       <position name="thumb_abduction_joint" joint="thumb_abduction_joint" ctrlrange="-1.5 1.5"/> 
